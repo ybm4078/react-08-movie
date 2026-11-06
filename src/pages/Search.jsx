@@ -36,7 +36,7 @@ function Search() {
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
             <div className={styles.body}>
-                {list.map((item, index) => (
+                {Array.isArray(list) ? list.map((item, index) => (
                     <Link key={index} to={`/detail/${item.imdbID}`} className={styles.Link}>
                         {item.Poster ? (
                             <img src={item.Poster} alt={item.Title} className={styles.cover} />
@@ -49,7 +49,7 @@ function Search() {
                             <div className={styles.authors}>{item.Year}</div>
                         </div>
                     </Link>
-                ))}
+                )): "검색결과가 없습니다."}
             </div>
         </div>
     );

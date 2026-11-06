@@ -1,7 +1,27 @@
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
-import styles from "./Detail.module.css";
+import { Container } from "./Home.jsx";
+import styled from "styled-components";
 
+const BackBtn = styled.button`
+    display: block;
+    margin-bottom: 20px;
+    background: none;
+    border: none;
+    color: #ff5959;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+const Plot = styled.p`
+    line-height: 1.6;
+    margin-top: 20px;
+`;
 function Detail() {
     const navigate = useNavigate();
 
@@ -17,28 +37,23 @@ function Detail() {
     }, []);
 
     if (!list) {
-        return <div className={styles.container}>Loading...</div>;
+        return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.container}>
-            <button
-                className={styles.backBtn}
+        <Container>
+            <BackBtn
                 onClick={() => {
                     // 사용자를 이동시키기 위해 뭘 써야되느냐
                     navigate(-1);
                 }}>
                 &larr; Back
-            </button>
+            </BackBtn>
             <h2>{list.title}</h2>
-            {list.Poster ? (
-                <img className={styles.cover} src={list.Poster} alt={list.Title} />
-            ) : (
-                <div className={styles.no_cover}>No Cover</div>
-            )}
-            <div className={styles.d1}>
-                <div className={styles.title}>{list.Title}</div>
-                <div className={styles.authors}>
+            {list.Poster ? <img src={list.Poster} alt={list.Title} /> : <div>No Cover</div>}
+            <div>
+                <div>{list.Title}</div>
+                <div>
                     <span>Year:</span> {list.Year}
                 </div>
                 <div>
@@ -48,9 +63,9 @@ function Detail() {
                     <span>Director:</span> {list.Director}
                 </div>
                 <br />
-                <p>{list.Plot}</p>
+                <Plot>{list.Plot}</Plot>
             </div>
-        </div>
+        </Container>
     );
 }
 

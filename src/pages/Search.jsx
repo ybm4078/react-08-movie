@@ -1,7 +1,17 @@
+import {useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router";
 import SearchBar from "../components/SearchBar.jsx";
-import styles from "./Search.module.css";
+import { Container } from "./Home.jsx";
+import styled from "styled-components";
+import MovieCard from "../components/MovieCard.jsx";
+
+const List = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 100px;
+    justify-content: center;
+`;
 
 function Search() {
     const [searchParams] = useSearchParams();
@@ -9,9 +19,10 @@ function Search() {
 
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const [error, setError] = useState(""); // 화면에 띄울 에러 메세지를 저장할 목적의 state
 
     useEffect(() => {
+        // keyword 변수 값이 null일 때는 fetch하면 안됨
         if (!keyword) return;
 
         setList([]);
@@ -19,39 +30,29 @@ function Search() {
 
         fetch(`https://www.omdbapi.com/?apikey=6a0a8eb4&s=${keyword}`)
             .then(res => res.json())
-            .then(json => {
-                setList(json.Search);
-            })
+            .then(json => setList(json.Search))
             .catch(err => {
-                console.log(err);
-                setError("검색하는데 오류가 발생하였습니다");
+                console.log(err); // 개발자가 개발자 도구에서 에러 분석 내용을 보기 위해서 하는 것
+                setError("검색하는데 오류가 발생하였습니다.");
             })
             .finally(() => setLoading(false));
     }, [keyword]);
 
     return (
-        <div className={styles.container}>
+        <Container>
             <h2>검색 키워드 : {keyword}</h2>
+
             <SearchBar keyword={keyword} />
+
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-            <div className={styles.body}>
-                {Array.isArray(list) ? list.map((item, index) => (
-                    <Link key={index} to={`/detail/${item.imdbID}`} className={styles.Link}>
-                        {item.Poster ? (
-                            <img src={item.Poster} alt={item.Title} className={styles.cover} />
-                        ) : (
-                            <div className={styles.no_cover}>No Cover</div>
-                        )}
 
-                        <div>
-                            <div className={styles.title}>{item.Title}</div>
-                            <div className={styles.authors}>{item.Year}</div>
-                        </div>
-                    </Link>
-                )): "검색결과가 없습니다."}
-            </div>
-        </div>
+            <List>
+                {Array.isArray(list)
+                    ? list.map((x, index) => <MovieCard key={index} movie={x} />)
+                    : "검색 결과가 없습니다."}
+            </List>
+        </Container>
     );
 }
 

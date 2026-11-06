@@ -1,12 +1,19 @@
 import SearchBar from "../components/SearchBar.jsx";
-import styles from "./Home.module.css";
+import styled from "styled-components";
+
+export const Container = styled.div`
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
 
 function Home() {
     return (
-        <div className={styles.container}>
-            <span className={styles.title}>Movie 검색</span>
+        <Container>
+            <span>Movie 검색</span>
             <SearchBar />
-        </div>
+        </Container>
     );
 }
 export default Home;
